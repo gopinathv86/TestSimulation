@@ -1,0 +1,64 @@
+using System;
+					
+public class TestSimulation 
+{
+	private int gridHight;
+    private int gridWidth;
+    private bool[,] cells;
+	public TestSimulation(int hight, int Width) {            
+            cells = new bool[hight, Width];            
+        }
+	public void Main()
+	{
+		 int runs = 0;
+		 gridWidth = 25;
+		 gridHight = 25;		
+         TestSimulation sim = new TestSimulation(gridHight, gridWidth);  
+		 while (runs++ < 50) {
+                sim.GrowandDie();                
+                System.Threading.Thread.Sleep(50);
+            }
+		
+	}
+//Any live cell with fewer than two live neighbors dies (referred to as underpopulation).
+//Any live cell with more than three live neighbors dies (referred to as overpopulation).
+//Any live cell with two or three live neighbors lives, unchanged, to the next generation.
+//Any dead cell with exactly three live neighbors will come to life
+	private void GrowandDie() 
+	{
+            for (int i = 0; i < gridHight; i++) {
+                for (int j = 0; j < gridWidth; j++) {
+                    int numOfAliveNeighbors = GetNeighborsforLife(i, j);
+
+                    if (cells[i, j]) {
+                        if (numOfAliveNeighbors < 2) {
+                            cells[i, j] = false;
+                        }
+
+                        if (numOfAliveNeighbors > 3) {
+                            cells[i, j] = false;
+                        }
+                    }
+                    else {
+                        if (numOfAliveNeighbors == 3) {
+                            cells[i, j] = true;
+                        }
+                    }
+                }
+            }
+        }
+	private int GetNeighborsforLife(int x, int y) {
+            int NumOfAliveNeighbors = 0;
+
+            for (int i = x - 1; i < x + 2; i++) {
+                for (int j = y - 1; j < y + 2; j++) {
+                    if (!((i < 0 || j < 0) || (i >= gridHight || j >= gridWidth))) {
+                        if (cells[i, j] == true) NumOfAliveNeighbors++;
+                    }
+                }
+            }
+            return NumOfAliveNeighbors;
+        }
+	
+	
+}
